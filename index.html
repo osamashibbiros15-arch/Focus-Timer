@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productivity Dashboard</title>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,65 +11,28 @@
             theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], } } }
         }
     </script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans p-4 md:p-8 transition-colors duration-300">
 
-    <!-- Sync Modal -->
-    <div id="sync-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-6 md:p-8 transform scale-95 transition-transform duration-300">
+    <!-- Settings Modal -->
+    <!-- Osama - This is v1.2 -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-6">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold flex items-center gap-2">
-                    <i data-lucide="cloud-sync" class="w-6 h-6 text-indigo-500"></i>
-                    Device Sync
-                </h3>
-                <button id="close-sync" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
+                <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="settings" class="w-6 h-6 text-indigo-500"></i> Settings</h3>
+                <button id="close-settings" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
             
-            <div class="space-y-6">
-                <!-- Export Section -->
-                <div class="bg-indigo-50 dark:bg-indigo-950/30 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/50">
-                    <label class="block text-sm font-bold text-indigo-900 dark:text-indigo-200 mb-2">1. Export to another device</label>
-                    <p class="text-xs text-indigo-600 dark:text-indigo-400 mb-3">Copy this code and paste it on your phone or tablet.</p>
-                    <div class="flex gap-2">
-                        <input id="sync-code-output" type="text" readonly class="flex-1 bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 rounded-lg px-3 py-2 text-sm font-mono text-slate-600 dark:text-slate-300 focus:outline-none">
-                        <button id="copy-sync-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2">
-                            <i data-lucide="copy" class="w-4 h-4"></i> Copy
-                        </button>
-                    </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">End of Day Boundary (Hour)</label>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">If you study late, set this to when you sleep. (e.g. 4 = 4:00 AM)</p>
+                    <input id="day-offset-input" type="number" min="0" max="23" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
                 </div>
-
-                <!-- Import Section -->
-                <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">2. Import from another device</label>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Paste a sync code here to overwrite your current data.</p>
-                    <div class="flex gap-2">
-                        <input id="sync-code-input" type="text" placeholder="Paste code here..." class="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-mono text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button id="import-sync-btn" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors flex items-center gap-2">
-                            <i data-lucide="download" class="w-4 h-4"></i> Sync
-                        </button>
-                    </div>
-                </div>
+                <button id="save-settings-btn" class="w-full bg-indigo-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">Save Settings</button>
             </div>
         </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="notification" class="hidden fixed top-4 right-4 left-4 md:left-auto md:w-96 bg-green-500 text-white p-4 rounded-xl shadow-lg flex items-start justify-between z-50 transition-opacity duration-300">
-        <div class="flex items-center gap-3">
-            <i id="notif-icon" data-lucide="check-circle" class="w-6 h-6 text-green-100"></i>
-            <div>
-                <h4 id="notif-title" class="font-bold">Success!</h4>
-                <p id="notif-message" class="text-sm text-green-50">Action completed.</p>
-            </div>
-        </div>
-        <button id="close-notif" class="text-green-100 hover:text-white transition-colors">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
     </div>
 
     <!-- Main Content -->
@@ -87,18 +48,9 @@
             </div>
             
             <div class="mt-4 md:mt-0 flex flex-wrap items-center gap-3">
-                <div class="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-950/40 px-4 py-2 rounded-xl border border-indigo-100 dark:border-indigo-900/50">
-                    <i data-lucide="clock" class="w-5 h-5 text-indigo-500"></i>
-                    <div>
-                        <div id="current-time" class="text-lg font-bold text-indigo-900 dark:text-indigo-100 tabular-nums leading-tight">--:--</div>
-                        <div id="current-date" class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider leading-tight">--</div>
-                    </div>
-                </div>
-
-                <button id="open-sync-btn" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors border border-slate-200 dark:border-slate-700 font-medium text-sm">
-                    <i data-lucide="smartphone" class="w-4 h-4"></i> Sync Devices
+                <button id="open-settings-btn" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
                 </button>
-
                 <button id="theme-toggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700">
                     <i data-lucide="moon" class="w-5 h-5"></i>
                 </button>
@@ -106,7 +58,7 @@
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Timer Column -->
+            <!-- Left Column: Timer & History -->
             <div class="lg:col-span-5 space-y-6">
                 <!-- Timer Card -->
                 <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 text-center flex flex-col items-center">
@@ -137,21 +89,26 @@
                     </div>
                 </div>
 
-                <!-- Focus Tracker -->
-                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl shadow-md text-white border border-transparent dark:border-indigo-400/20 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-indigo-100 font-medium mb-1 flex items-center gap-2">
-                            <i data-lucide="trophy" class="w-5 h-5"></i> Total Focus
-                        </h2>
-                        <div id="total-focus" class="text-4xl font-black tracking-tight mt-1">0 min</div>
+                <!-- Today's Focus -->
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl shadow-md text-white border border-transparent dark:border-indigo-400/20">
+                    <h2 class="text-indigo-100 font-medium mb-1 flex items-center gap-2">
+                        <i data-lucide="trophy" class="w-5 h-5"></i> Today's Focus
+                    </h2>
+                    <div id="today-focus" class="text-4xl font-black tracking-tight mt-1">0 min</div>
+                </div>
+
+                <!-- 7 Day History -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i> Past 7 Days
+                    </h2>
+                    <div id="history-list" class="space-y-3">
+                        <!-- History injected here -->
                     </div>
-                    <button id="reset-tracker-btn" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors" title="Reset Total Time">
-                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-                    </button>
                 </div>
             </div>
 
-            <!-- Tasks Column -->
+            <!-- Right Column: Tasks -->
             <div class="lg:col-span-7">
                 <div class="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 h-full">
                     <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
@@ -175,21 +132,28 @@
         lucide.createIcons();
 
         // App State
+        const STORAGE_KEY = 'focusDashDataV2';
         let isDarkMode = false;
         let sessionLength = 25;
         let timeLeft = 25 * 60;
         let isActive = false;
         let timerInterval = null;
-        let totalFocusMinutes = 0;
         let tasks = [];
+        let dayOffsetHours = 4; // Default to 4 AM boundary
+        let dailyStats = {}; // Format: { "YYYY-MM-DD": totalSeconds }
+
+        // --- CORE LOGIC: Date Boundary ---
+        // Subtracts the offset hours so night study counts for the previous day
+        function getLogicalDate() {
+            const now = new Date();
+            now.setHours(now.getHours() - dayOffsetHours);
+            return now.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+        }
 
         // --- STORAGE SYSTEM ---
-        const STORAGE_KEY = 'focusDashData';
-
         function saveData() {
-            const data = { isDarkMode, sessionLength, totalFocusMinutes, tasks };
+            const data = { isDarkMode, sessionLength, tasks, dayOffsetHours, dailyStats };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            updateSyncCodeUI();
         }
 
         function loadData() {
@@ -199,85 +163,45 @@
                     const data = JSON.parse(saved);
                     isDarkMode = data.isDarkMode || false;
                     sessionLength = data.sessionLength || 25;
-                    totalFocusMinutes = data.totalFocusMinutes || 0;
                     tasks = data.tasks || [];
+                    dayOffsetHours = data.dayOffsetHours !== undefined ? data.dayOffsetHours : 4;
+                    
+                    // Migrate old data if upgrading from V1
+                    if (data.totalFocusMinutes && !data.dailyStats) {
+                        const today = getLogicalDate();
+                        dailyStats = {};
+                        dailyStats[today] = data.totalFocusMinutes * 60;
+                    } else {
+                        dailyStats = data.dailyStats || {};
+                    }
                     
                     timeLeft = sessionLength * 60;
-                    applyTheme();
-                    updateTimerUI();
-                    updateTotalFocusUI();
-                    renderTasks();
-                } catch (e) {
-                    console.error("Error loading saved data", e);
-                }
+                } catch (e) { console.error("Error loading data", e); }
             }
-        }
-
-        // Generate Base64 String for Cloud Sync
-        function generateSyncCode() {
-            const data = { sessionLength, totalFocusMinutes, tasks };
-            return btoa(encodeURIComponent(JSON.stringify(data)));
-        }
-
-        function importSyncCode(code) {
-            try {
-                const data = JSON.parse(decodeURIComponent(atob(code)));
-                sessionLength = data.sessionLength || 25;
-                totalFocusMinutes = data.totalFocusMinutes || 0;
-                tasks = data.tasks || [];
-                
-                timeLeft = sessionLength * 60;
-                isActive = false;
-                clearInterval(timerInterval);
-                
-                toggleTimerUI();
-                updateTimerUI();
-                updateTotalFocusUI();
-                renderTasks();
-                saveData();
-                return true;
-            } catch (e) {
-                return false;
-            }
+            applyTheme();
+            updateTimerUI();
+            updateStatsUI();
+            renderTasks();
+            document.getElementById('day-offset-input').value = dayOffsetHours;
         }
 
         // --- DOM Elements ---
-        const htmlEl = document.documentElement;
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const sessionInput = document.getElementById('session-length');
         const startBtn = document.getElementById('start-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const resetTrackerBtn = document.getElementById('reset-tracker-btn');
+        const sessionInput = document.getElementById('session-length');
+        const htmlEl = document.documentElement;
         
-        // --- Initialization ---
         loadData();
 
         // Theme Logic
         function applyTheme() {
-            if (isDarkMode) {
-                htmlEl.classList.add('dark');
-                themeToggleBtn.innerHTML = '<i data-lucide="sun" class="w-5 h-5"></i>';
-            } else {
-                htmlEl.classList.remove('dark');
-                themeToggleBtn.innerHTML = '<i data-lucide="moon" class="w-5 h-5"></i>';
-            }
+            if (isDarkMode) htmlEl.classList.add('dark');
+            else htmlEl.classList.remove('dark');
+            document.getElementById('theme-toggle').innerHTML = `<i data-lucide="${isDarkMode ? 'sun' : 'moon'}" class="w-5 h-5"></i>`;
             lucide.createIcons();
         }
+        document.getElementById('theme-toggle').addEventListener('click', () => { isDarkMode = !isDarkMode; applyTheme(); saveData(); });
 
-        themeToggleBtn.addEventListener('click', () => {
-            isDarkMode = !isDarkMode;
-            applyTheme();
-            saveData();
-        });
-
-        // Clock (Dhaka)
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('current-time').textContent = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).format(now);
-            document.getElementById('current-date').textContent = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Dhaka', weekday: 'short', month: 'short', day: 'numeric' }).format(now);
-        }, 1000);
-
-        // Timer Logic
+        // --- TIMER LOGIC ---
         function formatTime(s) {
             return `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
         }
@@ -303,49 +227,131 @@
         startBtn.addEventListener('click', () => {
             isActive = !isActive;
             toggleTimerUI();
+            
             if (isActive) {
+                // Main Timer Loop
                 timerInterval = setInterval(() => {
-                    if (timeLeft > 0) { timeLeft--; updateTimerUI(); } 
-                    else {
+                    if (timeLeft > 0) { 
+                        timeLeft--; 
+                        
+                        // ** THE FIX: Add time second-by-second to today's stats **
+                        const today = getLogicalDate();
+                        dailyStats[today] = (dailyStats[today] || 0) + 1;
+                        
+                        updateTimerUI(); 
+                        
+                        // Only update the heavy UI every minute to save CPU
+                        if (timeLeft % 60 === 0) updateStatsUI();
+                        
+                    } else {
+                        // Timer hits zero organically
                         clearInterval(timerInterval);
                         isActive = false;
-                        totalFocusMinutes += sessionLength;
                         timeLeft = sessionLength * 60;
                         saveData();
-                        updateTotalFocusUI();
+                        updateStatsUI();
                         updateTimerUI();
                         toggleTimerUI();
-                        showNotification('Session Complete!', `Added ${sessionLength} mins to focus tracker.`, 'trophy');
+                        
+                        // Play a native beep sound
+                        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                        const osc = ctx.createOscillator(); osc.connect(ctx.destination);
+                        osc.frequency.setValueAtTime(440, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.2);
                     }
                 }, 1000);
-            } else { clearInterval(timerInterval); }
-        });
-
-        resetBtn.addEventListener('click', () => {
-            isActive = false; clearInterval(timerInterval); timeLeft = sessionLength * 60;
-            updateTimerUI(); toggleTimerUI();
-        });
-
-        sessionInput.addEventListener('change', (e) => {
-            let val = parseInt(e.target.value) || 1;
-            sessionLength = val < 1 ? 1 : val;
-            saveData();
-            if (!isActive) { timeLeft = sessionLength * 60; updateTimerUI(); }
-        });
-
-        // Tracker Logic
-        function updateTotalFocusUI() {
-            const h = Math.floor(totalFocusMinutes / 60); const m = totalFocusMinutes % 60;
-            document.getElementById('total-focus').textContent = h > 0 ? `${h} hr ${m} min` : `${m} min`;
-        }
-
-        resetTrackerBtn.addEventListener('click', () => {
-            if(confirm("Reset your total focus time back to 0?")) {
-                totalFocusMinutes = 0; saveData(); updateTotalFocusUI();
+            } else {
+                // When paused, interval clears, but elapsed time is already safely in dailyStats!
+                clearInterval(timerInterval);
+                saveData(); // Save the partial progress to local storage
+                updateStatsUI();
             }
         });
 
-        // Tasks Logic
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            isActive = false; clearInterval(timerInterval); timeLeft = sessionLength * 60;
+            saveData(); updateTimerUI(); toggleTimerUI(); updateStatsUI();
+        });
+
+        sessionInput.addEventListener('change', (e) => {
+            let val = parseInt(e.target.value) || 1; sessionLength = val < 1 ? 1 : val; saveData();
+            if (!isActive) { timeLeft = sessionLength * 60; updateTimerUI(); }
+        });
+
+        // --- STATS LOGIC ---
+        function formatMinutesToHours(totalMinutes) {
+            const h = Math.floor(totalMinutes / 60);
+            const m = totalMinutes % 60;
+            return h > 0 ? `${h}h ${m}m` : `${m}m`;
+        }
+
+        function updateStatsUI() {
+            const todayStr = getLogicalDate();
+            
+            // 1. Update Today's Focus
+            const todaySeconds = dailyStats[todayStr] || 0;
+            const todayMinutes = Math.floor(todaySeconds / 60);
+            document.getElementById('today-focus').textContent = formatMinutesToHours(todayMinutes);
+
+            // 2. Build 7-Day History
+            const historyList = document.getElementById('history-list');
+            let historyHTML = '';
+            
+            for (let i = 0; i < 7; i++) {
+                const targetDate = new Date();
+                targetDate.setHours(targetDate.getHours() - dayOffsetHours); // Apply offset
+                targetDate.setDate(targetDate.getDate() - i);
+                
+                const dateStr = targetDate.toISOString().split('T')[0];
+                const displayDate = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).format(targetDate);
+                
+                const seconds = dailyStats[dateStr] || 0;
+                const minutes = Math.floor(seconds / 60);
+                
+                // Calculate bar width (max 4 hours/240 mins = 100%)
+                const barWidth = Math.min((minutes / 240) * 100, 100);
+                
+                let textColor = i === 0 ? "text-indigo-600 dark:text-indigo-400 font-bold" : "text-slate-600 dark:text-slate-400";
+                let dayLabel = i === 0 ? "Today" : displayDate;
+
+                historyHTML += `
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="${textColor}">${dayLabel}</span>
+                            <span class="font-medium text-slate-700 dark:text-slate-300">${formatMinutesToHours(minutes)}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+                            <div class="bg-indigo-500 h-2 rounded-full opacity-80" style="width: ${barWidth}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            historyList.innerHTML = historyHTML;
+        }
+
+        // --- SETTINGS UI ---
+        const settingsModal = document.getElementById('settings-modal');
+        document.getElementById('open-settings-btn').addEventListener('click', () => {
+            document.getElementById('day-offset-input').value = dayOffsetHours;
+            settingsModal.classList.remove('hidden');
+            setTimeout(() => settingsModal.classList.remove('opacity-0'), 10);
+        });
+
+        function closeSettings() {
+            settingsModal.classList.add('opacity-0');
+            setTimeout(() => settingsModal.classList.add('hidden'), 300);
+        }
+        document.getElementById('close-settings').addEventListener('click', closeSettings);
+        
+        document.getElementById('save-settings-btn').addEventListener('click', () => {
+            let val = parseInt(document.getElementById('day-offset-input').value) || 0;
+            if (val < 0) val = 0; if (val > 23) val = 23;
+            dayOffsetHours = val;
+            saveData();
+            updateStatsUI(); // Re-render history with new boundaries
+            closeSettings();
+        });
+
+        // --- TASKS LOGIC (Unchanged) ---
         function renderTasks() {
             const list = document.getElementById('task-list');
             if (tasks.length === 0) {
@@ -365,66 +371,13 @@
         }
 
         document.getElementById('task-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const input = document.getElementById('task-input');
+            e.preventDefault(); const input = document.getElementById('task-input');
             if (!input.value.trim()) return;
             tasks.push({ id: Date.now(), text: input.value.trim(), completed: false });
-            input.value = '';
-            saveData(); renderTasks();
+            input.value = ''; saveData(); renderTasks();
         });
-
         window.toggleTask = (id) => { tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t); saveData(); renderTasks(); };
         window.deleteTask = (id) => { tasks = tasks.filter(t => t.id !== id); saveData(); renderTasks(); };
-
-        // --- Sync UI Logic ---
-        const syncModal = document.getElementById('sync-modal');
-        const syncCodeOutput = document.getElementById('sync-code-output');
-        
-        function updateSyncCodeUI() { syncCodeOutput.value = generateSyncCode(); }
-
-        document.getElementById('open-sync-btn').addEventListener('click', () => {
-            updateSyncCodeUI();
-            syncModal.classList.remove('hidden');
-            setTimeout(() => syncModal.classList.remove('opacity-0'), 10);
-        });
-
-        document.getElementById('close-sync').addEventListener('click', () => {
-            syncModal.classList.add('opacity-0');
-            setTimeout(() => syncModal.classList.add('hidden'), 300);
-        });
-
-        document.getElementById('copy-sync-btn').addEventListener('click', () => {
-            syncCodeOutput.select();
-            document.execCommand('copy');
-            showNotification('Code Copied!', 'Paste this code on your other device.', 'copy');
-        });
-
-        document.getElementById('import-sync-btn').addEventListener('click', () => {
-            const input = document.getElementById('sync-code-input');
-            if (importSyncCode(input.value.trim())) {
-                input.value = '';
-                syncModal.classList.add('opacity-0');
-                setTimeout(() => syncModal.classList.add('hidden'), 300);
-                showNotification('Sync Successful!', 'Your devices are now matched.', 'check-circle');
-            } else {
-                alert("Invalid Sync Code. Please make sure you copied the whole text.");
-            }
-        });
-
-        // Notifications
-        let notifTimeout;
-        function showNotification(title, message, iconStr) {
-            const el = document.getElementById('notification');
-            document.getElementById('notif-title').textContent = title;
-            document.getElementById('notif-message').textContent = message;
-            document.getElementById('notif-icon').setAttribute('data-lucide', iconStr);
-            lucide.createIcons();
-            
-            el.classList.remove('hidden');
-            clearTimeout(notifTimeout);
-            notifTimeout = setTimeout(() => el.classList.add('hidden'), 4000);
-        }
-        document.getElementById('close-notif').addEventListener('click', () => document.getElementById('notification').classList.add('hidden'));
 
     </script>
 </body>
